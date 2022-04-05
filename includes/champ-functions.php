@@ -3,37 +3,65 @@
  * Add my new menu to the Admin Control Panel
  */
  
-// Hook the 'admin_menu' action hook, run the function named 'championnats_menu()'
-add_action( 'admin_menu', 'championnats_menu' );
+ //creer une nouvelle table dans la base
+ function championnats_table(){
+	global $wpdb;
+
+	$charset_collate = $wpdb->get_charset_collate();
+	$tablename = $wpdb->prefix."equipe";
+	$sql = "CREATE TABLE $tablename (
+	  id mediumint(11) NOT NULL AUTO_INCREMENT,
+	  libelle varchar(100) NOT NULL,
+	  annee varchar(4) NOT NULL,
+	  numero_champ int NOT NULL,
+    division_champ int NOT NULL,
+    phase_champ int NOT NULL,
+    poule_champ int NOT NULL,
+    equipe_champ int NOT NULL,
+    archiver bit NOT NULL,
+	 
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+}
+register_activation_hook( __FILE__, 'championnats_table' );
+
+function parametrage_table(){
+	global $wpdb;
+
+	$charset_collate = $wpdb->get_charset_collate();
+	$tablename = $wpdb->prefix."parametrage";
+	$sql = "CREATE TABLE $tablename (
+	  cle_pattern varchar(50) NOT NULL,
+	  valeur_url varchar(255) NOT NULL,
+	 
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+}
+register_activation_hook( __FILE__, 'parametrage_table' );
  
 // Add a new top level menu link to the ACP
 function championnats_menu()
 {
-  $page_title = 'Championnats Options';
-  $menu_title = 'Championnats';
-  $capatibility = 'manage_options';
-  $slug = 'championnats';
-  $callback ='championnats_html';
-  $function = 'displayList';
-  $icon_url = plugins_url('/championnats/img/TCicon.png');
-  $position = 70;
- /* add_menu_page("Championnats Options", "Championnats","manage_options", "championnats","championnats_html", "displayList",plugins_url('/customplugin/img/icon.png'));
-    add_submenu_page("myplugin","All Entries", "All entries","manage_options", "allentries", "displayList");
-    add_submenu_page("myplugin","Add new Entry", "Add new Entry","manage_options", "addnewentry", "addEntry");*/
+  
+ add_menu_page("Championnats Options", "Championnats","manage_options", "championnats", "affichageListeEquipe", plugins_url('/championnats/img/TCicon.png'));
+    add_submenu_page("championnats","Liste Equipe", "Liste Equipe","manage_options", "listequipe", "affichageListeEquipe");
+    add_submenu_page("championnats","Creation", "Creation","manage_options", "creationEquipe", "creationEquipe");
 
-  add_menu_page($page_title, $menu_title, $capatibility, $slug, $callback, $function, $icon_url, $position);
+}
+// Hook the 'admin_menu' action hook, run the function named 'championnats_menu()'
+add_action( 'admin_menu', 'championnats_menu' );
+
+function affichageListeEquipe(){
+	include "affichageListeEquipe.php";
 }
 
-function championnats_html() { ?>
-
-<div class="wrap">
-  <h1>Résultats des champions !</h1>
-  <button type = "button" class="btn btn-light btn-lg" id="listeEquipe" name ="listeEquipe" >Liste des équipes</button>
-  <button type = "button" class="btn btn-light btn-lg" id="parametrage" name ="Parametrage" >Paramétrage</button>
-  <p>Afficher la liste des equipes non archiver dans un tableau</p>
-</div>    
-
-<?php }
+function creationEquipe(){
+	include "creationEquipe.php";
+}
 
 class ChampionnatsPlugin
 {
