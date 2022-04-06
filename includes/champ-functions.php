@@ -1,33 +1,35 @@
 <?php
-/*
- * Add my new menu to the Admin Control Panel
- */
+
  
  //creer une nouvelle table dans la base
- function championnats_table(){
-	global $wpdb;
 
+ function championnats_table(){
+  global $wpdb;
+
+ 
 	$charset_collate = $wpdb->get_charset_collate();
-	$tablename = $wpdb->prefix."equipe";
-	$sql = "CREATE TABLE $tablename (
-	  id mediumint(11) NOT NULL AUTO_INCREMENT,
+	$table_name = $wpdb->prefix."equipe";
+	$sql = "CREATE TABLE $table_name (
+	  id int NOT NULL AUTO_INCREMENT,
 	  libelle varchar(100) NOT NULL,
 	  annee varchar(4) NOT NULL,
 	  numero_champ int NOT NULL,
-    division_champ int NOT NULL,
-    phase_champ int NOT NULL,
-    poule_champ int NOT NULL,
-    equipe_champ int NOT NULL,
-    archiver bit NOT NULL,
+	  division_champ int NOT NULL,
+	  phase_champ int NOT NULL,
+	  poule_champ int NOT NULL,
+	  equipe_champ int NOT NULL,
+	  archiver bit NOT NULL
 	 
 	) $charset_collate;";
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
+
+  
 }
 register_activation_hook( __FILE__, 'championnats_table' );
 
-function parametrage_table(){
+/*function parametrage_table(){
 	global $wpdb;
 
 	$charset_collate = $wpdb->get_charset_collate();
@@ -41,7 +43,7 @@ function parametrage_table(){
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 }
-register_activation_hook( __FILE__, 'parametrage_table' );
+register_activation_hook( __FILE__, 'parametrage_table' );*/
  
 // Add a new top level menu link to the ACP
 function championnats_menu()
@@ -68,16 +70,6 @@ class ChampionnatsPlugin
   function register(){
     add_action ('admin_enqueue_scripts', array( $this , 'enqueue' ));
   }
- 
-  function activate(){
-   //generated a cpt
-   //flush rewrite rules
-
-  }
-  function deactivate(){
-   //flush rewrite rules
-
-  }
 
   function enqueue(){
     //enqueue all our scripts
@@ -96,15 +88,4 @@ function customfunctiontest($arg){
   echo $arg;
 }
 
-customfunctiontest('hello test de ma page');
-
-//activation
-register_activation_hook( __FILE__, array($championnatsPlugin, 'activate'));
-  
-
-//deactivation
-register_deactivation_hook( __FILE__, array($championnatsPlugin, 'deactivate') );
-  
-
-
- 
+customfunctiontest('hello test de mon plugin');

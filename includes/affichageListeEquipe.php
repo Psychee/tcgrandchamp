@@ -1,12 +1,12 @@
 <?php 
 
 global $wpdb;
-$tablename = $wpdb->prefix."equipe";
+$table_name = $wpdb->prefix."equipe";
 
 // supprimer un enregistrement
 if(isset($_GET['supprimer'])){
 	$supprimer = $_GET['supprimer'];
-	$wpdb->query("DELETE FROM ".$tablename." WHERE id=".$supprimer);
+	$wpdb->query("DELETE FROM ".$table_name." WHERE id=".$supprimer);
 }
 ?>
 <h1>Liste des équipes</h1>
@@ -27,7 +27,7 @@ if(isset($_GET['supprimer'])){
 	</tr>
 	<?php
 	// Selectionner un enregistrement
-	$entreeListe = $wpdb->get_results("SELECT * FROM ".$tablename." order by id desc");
+	$entreeListe = $wpdb->get_results("SELECT * FROM ".$table_name." order by id desc");
 	if(count($entreeListe) > 0){
 		$count = 1;
 		foreach($entreeListe as $entree){
@@ -40,7 +40,7 @@ if(isset($_GET['supprimer'])){
 		    	<td>".$id."</td>
 		    	<td>".$libelle."</td>
 		    	<td>".$annee."</td>
-		    	<td><a href='?page=allentries&delid=".$id."'>Delete</a></td>
+		    	<td><a href='?page=allentries&delid=".$id."'>Suprimer</a></td>
 		    </tr>
 		    ";
 		    

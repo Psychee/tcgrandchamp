@@ -14,12 +14,12 @@ if(isset($_POST['but_submit'])){
     $equipe_champ = $_POST['txt_equipe_champ'];
     $archiver = $_POST['txt_archiver'];
 
-	$tablename = $wpdb->prefix."equipe";
+	$table_name = $wpdb->prefix."equipe";
 
 	if($libelle != '' && $annee != '' && $numero_champ != ''&& $division_champ != '' && $phase_champ != ''  && $poule_champ != ''&& $equipe_champ != ''&& $archiver != ''){
-		$check_data = $wpdb->get_results("SELECT * FROM ".$tablename." WHERE libelle ='".$libelle."' ");
+		$check_data = $wpdb->get_results("SELECT * FROM ".$table_name." WHERE libelle ='".$libelle."' ");
 	    if(count($check_data) == 0){
-	        $insert_sql = "INSERT INTO ".$tablename."(libelle,annee,numer_champ,division_champ,phase_champ,poule_champ,equipe_champ,archiver) values('".$libelle."','".$annee."','".$numero_champ."','".$division_champ."','".$phase_champ."','".$poule_champ."','".$equipe_champ."','".$archiver."') ";
+	        $insert_sql = "INSERT INTO ".$table_name."(libelle,annee,numer_champ,division_champ,phase_champ,poule_champ,equipe_champ,archiver) values('".$libelle."','".$annee."','".$numero_champ."','".$division_champ."','".$phase_champ."','".$poule_champ."','".$equipe_champ."','".$archiver."') ";
 	        $wpdb->query($insert_sql);
 	        echo "l'equipe a ete creer avec succes!";
 	    }
