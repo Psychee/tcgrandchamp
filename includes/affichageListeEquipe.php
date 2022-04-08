@@ -4,9 +4,9 @@ global $wpdb;
 $tablename = $wpdb->prefix."equipe";
 
 // supprimer un enregistrement
-if(isset($_GET['sub_supprimer'])){
-	$supprimer = $_GET['sub_supprimer'];
-	$wpdb->query("DELETE FROM ".$tablename." WHERE id=".$supprimer);
+if(isset($_GET["action"])){
+	$idEquipe = $_GET['idEquipe'];
+	$wpdb->query("DELETE FROM ".$tablename." WHERE id=".$idEquipe);
 }
 
 ?>
