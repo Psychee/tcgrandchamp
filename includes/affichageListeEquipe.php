@@ -8,10 +8,7 @@ if(isset($_GET['sub_supprimer'])){
 	$supprimer = $_GET['sub_supprimer'];
 	$wpdb->query("DELETE FROM ".$tablename." WHERE id=".$supprimer);
 }
-if(isset($_GET['modifier'])){
-	$modifier = $_GET['modifier'];
-	$wpdb->query("SELECT * FROM ".$tablename." WHERE id=".$modifier);
-}
+
 ?>
 <h1>Liste des équipes</h1>
 
@@ -51,13 +48,14 @@ if(isset($_GET['modifier'])){
 				<td>".$annee."</td>
 		    	<td>".$libelle."</td>
 				<td> Numero championnat : ".$numero_championnat."<br> Division : ".$division_championnat."<br> Phase : ".$phase_championnat."<br> Poule : ".$poule_championnat."<br> Equipe : ".$numero_equipe."</td>
-		    	
-		    	<td><input type = 'button' class='btn btn-light btn-lg' id='modifier' name='sub_editer' value='Modifier'><a href='#'".$id."'</a></input>
+		    	<input type='hidden' id='pageurl'name='pageurl'value='pageurl'/>
+		    	<td><a href='?page=modificationEquipe&modifier=".$id."' name='sub_modifier'>Modifier</a>
 				<br>
-				<input type = 'button' class='btn btn-light btn-lg' id='supprimer' name='sub_supprimer' value='Supprimer'><a href='#'".$id."'</a></input>
+				<a href='?page=affichageListeEquipe=".$id."' name='sub_supprimer'>Supprimer</a>
 				</td>
 		    </tr>
 		    ";
+			$count++;
 		    
 		}
 	}else{

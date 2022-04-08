@@ -1,13 +1,6 @@
 <?php 
 
 global $wpdb;
-//verifier energistrer et non vide
-/*if(!empty($_POST) && $_POST['but_submit']){
-	//verifie que chaque champ est rempli
-	if(isset($_POST['txt_libelle']), $_POST['txt_annee'], $_POST['txt_numero_championnat'], $_POST['txt_division_championnat'], $_POST['txt_phase_championnat'], $_POST['txt_poule_championnat'], $_POST['txt_numero_equipe'], $_POST['txt_archivee'])
-	&& !empty($_POST['txt_libelle']) && !empty($_POST['txt_annee']) && !empty($_POST['txt_numero_championnat']) && !empty($_POST['txt_division_championnat']) && !empty($_POST['txt_phase_championnat']) && !empty($_POST['txt_poule_championnat']) && !empty($_POST['txt_numero_equipe']) && !empty($_POST['txt_archivee'])
-	){*/
-
 
 //verifier energistrer et non vide	
 if(!empty($_POST) && $_POST['but_submit']){
