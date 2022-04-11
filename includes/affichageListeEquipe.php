@@ -30,7 +30,7 @@ if(isset($_GET["action"])){
 	</tr>
 	<?php
 	// Selectionner un enregistrement
-	$entreeListe = $wpdb->get_results("SELECT * FROM ".$tablename." order by id desc");
+	$entreeListe = $wpdb->get_results("SELECT * FROM ".$tablename." where archivee =0 order by id desc"  );
 	if(count($entreeListe) > 0){
 		foreach($entreeListe as $entree){
 		    $id = $entree->id;

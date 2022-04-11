@@ -4,9 +4,8 @@ global $wpdb;
 
 $zoneInformation = true;
 $message ="";
-//"Une erreur est survenue";
-//$false = "l'equipe à été créer avec succès!";
-//print_r($_GET["action"]);
+
+//verifier on a une action
 if(isset($_GET["action"])){
 	$modifier ="modifier";
 	$creer ="creer";
@@ -28,7 +27,7 @@ if(isset($_GET["action"])){
 		$tablename = $wpdb->prefix."equipe";
 		$idEquipe = $_GET['idEquipe'];
 		$equipes = $wpdb->get_results("SELECT * FROM ".$tablename." WHERE id=".$idEquipe);
-		//print_r ($equipes);
+		
 		if(count($equipes)==1){
 			foreach($equipes as $equipe){
 				$libelle = $equipe->libelle;
@@ -48,16 +47,16 @@ if(isset($_GET["action"])){
 
 	}else{
 		$zoneInformation= true;
-		$message= "l'action demander est impossible'";
+		$message= "l'action demandée est impossible";
 	}
 }else{
 	$zoneInformation= true;
-	$message= "l'action n'exist pas'";
+	$message= "l'action n'exist pas";
 }
 
 //verifier energistrer et non vide	
 if($zoneInformation==false && !empty($_POST)){
-	print_r($_POST);
+	
 	$zoneInformation = true;
 	//on recupere le données en les protégeant contre la faille XSS
 	$libelle = strip_tags( $_POST['txt_libelle']);
@@ -74,16 +73,17 @@ if($zoneInformation==false && !empty($_POST)){
 	//si $_get['action']==creer inserer donnée en base préparer les paramêtre pour se protéger contre injection sql 
 	if(strcmp($_GET["action"],$creer)==0){
 		//l'action est verifier donc on insert les données en base en preparant les parametre pour eviter injection sql à faire!
-		$wpdb->insert($tablename, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat ,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$numero_equipe,'archivee'=>$archivee));
-		if($wpdb->insert() == false){
+		$inserted= $wpdb->insert($tablename, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat ,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$numero_equipe,'archivee'=>$archivee));
+		if($inserted===false){
 			$message="la création de l'équipe n'à pas pu se faire";
 		}else{
 			$message="l'equipe a bien été créée";
 		}
 	}elseif(strcmp($_GET["action"],$modifier)==0){
 		//l'action est verifier donc on met à jour les données en base en preparant les parametre pour eviter injection sql à faire!
-		$wpdb->update($tablename, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$umero_equipe,'archivee'=>$archivee), array('id' => $idEquipe), $format = null, $where_format= null);
-		if($wpdb->update() == false){
+		$updated = $wpdb->update($tablename, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$umero_equipe,'archivee'=>$archivee), array('id' => $idEquipe), $format = null, $where_format= null);
+		//print_r($updated);
+		if($updated===false){
 			$message="la modification de l'équipe n'à pas pu se faire";
 		}else{
 			$message="l'equipe a bien été modifiée";
@@ -99,46 +99,46 @@ if($zoneInformation){
 	
 }else{
 
-echo "<h1>$titre Equipe</h1>
-<form method='post' action='#'>
-	<table>
-		<tr>
-			<td>Libelle</td>
-			<td><input type='text' name='txt_libelle'pattern='[a-zA-Z0-9]+' required='required' value='$libelle'></td>
-		</tr>
-		<tr>
-			<td>Année</td>
-			<td><input type='text' name='txt_annee'pattern='[0-9]{4}' required='required' value='$annee'></td>
-		</tr>
-		<tr>
-			<td>Numéro de Championnat</td>
-			<td><input type='text' name='txt_numero_championnat'pattern='[0-9]+' required='required' value='$numero_championnat'></td>
-		</tr>
-        <tr>
-			<td>Division</td>
-			<td><input type='text' name='txt_division_championnat'pattern='[0-9]+' required='required' value='$division_championnat'></td>
-		</tr>
-        <tr>
-			<td>Phase</td>
-			<td><input type='text' name='txt_phase_championnat'pattern='[0-9]+' required='required' value='$phase_championnat'></td>
-		</tr>
-        <tr>
-			<td>Poule</td>
-			<td><input type='text' name='txt_poule_championnat' pattern='[0-9]+' required='required' value='$poule_championnat'></td>
-		</tr>
-        <tr>
-			<td>Equipe</td>
-			<td><input type='text' name='txt_numero_equipe' pattern='[0-9]+' required='required' value ='$numero_equipe'></td>
-		</tr>
-        <tr>
-			<td>Archiver</td>
-			<td><input type='checkbox' name='txt_archivee' pattern='[0-9]+' required='required' value='$archivee'></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><input type='submit' name='but_submit' value='Enregister' [disabled]='!ngForm.valid'></td>
-		</tr>
-	</table>
-</form>"; 
+	echo "<h1>$titre Equipe</h1>
+	<form method='post' action='#'id='myform' name='myform'>
+		<table>
+			<tr>
+				<td>Libelle</td>
+				<td><input type='text' name='txt_libelle'pattern='[a-zA-Z0-9]+' required='required' value='$libelle'></td>
+			</tr>
+			<tr>
+				<td>Année</td>
+				<td><input type='text' name='txt_annee'pattern='[0-9]{4}' required='required' value='$annee'></td>
+			</tr>
+			<tr>
+				<td>Numéro de Championnat</td>
+				<td><input type='text' name='txt_numero_championnat'pattern='[0-9]+' required='required' value='$numero_championnat'></td>
+			</tr>
+			<tr>
+				<td>Division</td>
+				<td><input type='text' name='txt_division_championnat'pattern='[0-9]+' required='required' value='$division_championnat'></td>
+			</tr>
+			<tr>
+				<td>Phase</td>
+				<td><input type='text' name='txt_phase_championnat'pattern='[0-9]+' required='required' value='$phase_championnat'></td>
+			</tr>
+			<tr>
+				<td>Poule</td>
+				<td><input type='text' name='txt_poule_championnat' pattern='[0-9]+' required='required' value='$poule_championnat'></td>
+			</tr>
+			<tr>
+				<td>Equipe</td>
+				<td><input type='text' name='txt_numero_equipe' pattern='[0-9]+' required='required' value ='$numero_equipe'></td>
+			</tr>
+			<tr>
+				<td>Archiver</td>
+				<td><input type='checkbox' name='txt_archivee' value='1'></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type='submit' id='but_submit'name='but_submit' value='Enregister'></td>
+			</tr>	
+		</table>
+	</form>"; 
 }
 ?>

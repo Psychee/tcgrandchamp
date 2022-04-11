@@ -11,15 +11,7 @@
 	global $wpdb;
 
 	$charset_collate = $wpdb->get_charset_collate();
-	$tablename = $wpdb->prefix."parametrage";
-	$sql = "CREATE TABLE $tablename (
-	  cle_pattern varchar(50) NOT NULL,
-	  valeur_url varchar(255) NOT NULL,
-	 
-	) $charset_collate;";
-
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( $sql );
+	
 }
 register_activation_hook( __FILE__, 'parametrage_table' );*/
 
@@ -47,9 +39,10 @@ class ChampionnatsPlugin
   function championnats_table(){
     global $wpdb;
  
-    $charset_collate = $wpdb->get_charset_collate();
     $tablename = $wpdb->prefix."equipe";
-    $sql = "CREATE TABLE $tablename (
+    $table_name = $wpdb->prefix."parametrage";
+    $charset_collate = $wpdb->get_charset_collate();
+    $sql_equipe = "CREATE TABLE $tablename (
       id mediumint(11) NOT NULL AUTO_INCREMENT,
       libelle varchar(100) NOT NULL,
       annee varchar(4) NOT NULL,
@@ -62,8 +55,18 @@ class ChampionnatsPlugin
       PRIMARY KEY  (id)
     ) $charset_collate;";
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( $sql );
+    $sql_parametrage = "CREATE TABLE $table_name (
+      cle varchar(50) NOT NULL,
+      valeur varchar(255) NOT NULL,
+      PRIMARY KEY  (cle)
+    ) $charset_collate;";
+
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql_equipe );
+    dbDelta( $sql_parametrage );
+    
+    $url_post = $wpdb->insert($table_name, array('cle'=>'URL_POST','valeur'=>'TO DEFINE'));
+    $url_feuille_match = $wpdb->insert($table_name, array('cle'=>'URL_FEUILLE_MATCH','valeur'=>'TO DEFINE'));
   }
   
   function deactivate(){
