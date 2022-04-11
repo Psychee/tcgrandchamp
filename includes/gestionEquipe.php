@@ -1,8 +1,6 @@
 <?php
-
-	global $wpdb;
-
 	require('constantes.php');
+	require_once("requetesBDD.php");
 
 	// Variables globales de la zone d'information
 	$zoneInformation = true;
@@ -11,18 +9,14 @@
 	// Vérification du queryParam "action" qu'il soit bien valorisé dans le chemin d'accès
 	if (isset($_GET["action"])) {
 
-		// Liste des 2 queryParam "action" autorisés
-		$modifier ="modifier";
-		$creer ="creer";
-
 		// Désactivation de la zone d'information
 		$zoneInformation = false;
 
 		// Vérification si nous sommes dans une action de création d'équipe
-		if (strcmp($_GET["action"],$creer) == 0) {
+		if (strcmp($_GET["action"], $CREER) == 0) {
 			// Création d'équipe, on intialise l'ensemble des valeurs avec les valeurs par défaut
-			$titre="Création";
-			$libelle="";
+			$titre = "Création";
+			$libelle = "";
 			$annee = "";
 			$numero_championnat = "";
 			$division_championnat = "";
@@ -30,10 +24,10 @@
 			$poule_championnat = "";
 			$numero_equipe = "";
 		// Vérification si nous sommes dans une action de modification d'équipe
-		} elseif (strcmp($_GET["action"],$modifier) == 0) {
+		} elseif (strcmp($_GET["action"], $MODIFIER) == 0) {
 			// Modification d'équipe, on intialise l'ensemble des valeurs avec les valeurs de la BDD
 			$idEquipe = $_GET['idEquipe'];
-			$listeEquipes = $wpdb->get_results("SELECT * FROM ".$TABLE_EQUIPE." WHERE id = ".$idEquipe);
+			$listeEquipes = getEquipe($idEquipe);
 			
 			if (count($listeEquipes) == 1) {
 				// Valorisation des valeurs de l'équipe vis à vis des données présentes dans la BDD
@@ -77,10 +71,10 @@
 	    $numero_equipe = strip_tags($_POST['txt_numero_equipe']);
 	    $archivee = strip_tags($_POST['txt_archivee']);
 			
-		//si $_get['action']==creer inserer donnée en base préparer les paramêtre pour se protéger contre injection sql 
-		if (strcmp($_GET["action"], $creer) == 0) {
+		//si $_get['action']==$CREER inserer donnée en base préparer les paramêtre pour se protéger contre injection sql 
+		if (strcmp($_GET["action"], $CREER) == 0) {
 			// Action de création on insert donc les données en base en préparant les paramètres pour eviter les injections sql
-			$inserted= $wpdb->insert($TABLE_EQUIPE, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat ,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$numero_equipe,'archivee'=>$archivee));
+			$inserted = insertEquipe($libelle, $annee, $numero_championnat, $division_championnat, $phase_championnat, $poule_championnat, $numero_equipe);
 
 			// Vérification que la requête se soit bien éxécutée
 			if ($inserted === false) {
@@ -88,10 +82,10 @@
 			} else {
 				$message = "Equipe créée avec succès";
 			}
-		} elseif (strcmp($_GET["action"], $modifier) == 0) {
+		} elseif (strcmp($_GET["action"], $MODIFIER) == 0) {
 			// Action de mise à jours de l'équipe en préparant les paramètres pour eviter injection sql
-			$updated = $wpdb->update($TABLE_EQUIPE, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$umero_equipe,'archivee'=>$archivee), array('id' => $idEquipe), $format = null, $where_format = null);
-			//print_r($updated);
+			$updated = updateEquipe($idEquipe, $annee, $numero_championnat, $division_championnat, $phase_championnat, $poule_championnat, $numero_equipe, $archivee);
+
 			if ($updated === false) {
 				$message = "Modification d'équipe impossible";
 			} else{ 

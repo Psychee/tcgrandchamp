@@ -1,8 +1,8 @@
 <?php
 
     // Définition des variables globales
-    global $wpdb;
     require('constantes.php');
+    require_once("requetesBDD.php");
 
     $url_post = "Aucune valeur";
     $url_feuille_match = "Aucune valeur";
@@ -11,7 +11,7 @@
     $message = "";
 
     // Récupération de l'ensemble des valeurs de la table "parametrage"
-    $listeParametres = $wpdb->get_results("SELECT * FROM ".$TABLE_PARAMETRAGE);
+    $listeParametres = getAllParametrages();
     
     // On boucle sur l'ensemble des cle/valeur afin de valoriser le formulaire
     foreach ($listeParametres as $parametre) {
@@ -19,9 +19,9 @@
         $valeur = $parametre->valeur;
 
         // TODO : URL_POST & URL_FEUILLE_MATCH a définir dans des variables GLOBALES tout comme les noms des tables de la BDD
-        if (strcmp($cle, "URL_POST") == 0) {
+        if (strcmp($cle, $URL_POST) == 0) {
             $url_post = $valeur;
-        } elseif (strcmp($cle, "URL_FEUILLE_MATCH") == 0) {
+        } elseif (strcmp($cle, $URL_FEUILLE_MATCH) == 0) {
             $url_feuille_match = $valeur;
         } else {
             // Log précisant la clé inconnue
@@ -38,11 +38,11 @@
         $txt_url_feuille_match = strip_tags($_POST['txt_url_feuille_match']);
 
         // Mise à jours des valeurs l'une après l'autre vis à vis de sa clé primaire
-        if (!$wpdb->update($TABLE_PARAMETRAGE, array('valeur'=> $txt_url_post), array('cle' => $URL_POST), $format = null, $where_format = null)) {
+        if (!updateTableParametrage($URL_POST, $txt_url_post)) {
             $zoneInformation = true;
             $message = "La mise à jours de la clé ".$URL_POST." avec la valeur ".$txt_url_post." est impossible. ";
         }
-        if (!$wpdb->update($TABLE_PARAMETRAGE, array('valeur'=> $txt_url_feuille_match), array('cle' => $URL_FEUILLE_MATCH), $format = null, $where_format = null)) {
+        if (!updateTableParametrage($URL_FEUILLE_MATCH, $txt_url_feuille_match)) {
             $zoneInformation = true;
             $message = $message ."La mise à jours de la clé ".$URL_FEUILLE_MATCH." avec la valeur ".$txt_url_feuille_match." est impossible. ";
         }

@@ -43,43 +43,13 @@ class ChampionnatsPlugin
     // Fonction d'installation du plugin Championnats
     function championnats_table()
     {
-      global $wpdb;
       require('constantes.php');
+      require_once("initBDD.php");
 
-      $charset_collate = $wpdb->get_charset_collate();
-
-      $sql_equipe      = "CREATE TABLE $TABLE_EQUIPE (
-        id mediumint(11) NOT NULL AUTO_INCREMENT,
-        libelle varchar(100) NOT NULL,
-        annee varchar(4) NOT NULL,
-        numero_championnat mediumint(11) NOT NULL,
-        division_championnat mediumint(11) NOT NULL,
-        phase_championnat mediumint(11) NOT NULL,
-        poule_championnat mediumint(11) NOT NULL,
-        numero_equipe mediumint(11) NOT NULL,
-        archivee mediumint(11) NOT NULL,
-        PRIMARY KEY  (id)
-      ) $charset_collate;";
-      
-      $sql_parametrage = "CREATE TABLE $TABLE_PARAMETRAGE (
-        cle varchar(50) NOT NULL,
-        valeur varchar(255) NOT NULL,
-        PRIMARY KEY  (cle)
-      ) $charset_collate;";
-      
-      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-      dbDelta($sql_equipe);
-      dbDelta($sql_parametrage);
-      
-      // Création des clés des URL
-      $url_post          = $wpdb->insert($TABLE_PARAMETRAGE, array(
-          'cle' => $URL_POST,
-          'valeur' => 'TO DEFINE'
-      ));
-      $url_feuille_match = $wpdb->insert($TABLE_PARAMETRAGE, array(
-          'cle' => $URL_FEUILLE_MATCH,
-          'valeur' => 'TO DEFINE'
-      ));
+      creerTableEquipe();
+      creerTableParametrage();
+      insertParametrage($URL_POST);
+      insertParametrage($URL_FEUILLE_MATCH);
     }
     
     // TODO : commentaires ?
@@ -92,17 +62,10 @@ class ChampionnatsPlugin
     // Fonction de déinstallation du plugin Championnats
     function uninstall()
     {
-      // TODO : Pas de franglish
-      // Delete all the plugin data from the DB
-      global $wpdb;
+      require_once("uninstallBDD.php");
 
-      // Suppression de la table EQUIPE
-      $sql       = "DROP TABLE IF EXISTS $TABLE_EQUIPE";
-      $wpdb->query($sql);
-
-      // Suppression de la table PARAMETRAGE
-      $sql       = "DROP TABLE IF EXISTS $TABLE_PARAMETRAGE";
-      $wpdb->query($sql);
+      dropEquipe();
+      dropParametrage();
     }    
 }
 
