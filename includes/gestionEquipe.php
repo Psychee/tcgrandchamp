@@ -2,6 +2,8 @@
 
 	global $wpdb;
 
+	require('constantes.php');
+
 	// Variables globales de la zone d'information
 	$zoneInformation = true;
 	$message = "";
@@ -30,9 +32,8 @@
 		// Vérification si nous sommes dans une action de modification d'équipe
 		} elseif (strcmp($_GET["action"],$modifier) == 0) {
 			// Modification d'équipe, on intialise l'ensemble des valeurs avec les valeurs de la BDD
-			$tableEquipe = $wpdb->prefix."equipe";
 			$idEquipe = $_GET['idEquipe'];
-			$listeEquipes = $wpdb->get_results("SELECT * FROM ".$tableEquipe." WHERE id=".$idEquipe);
+			$listeEquipes = $wpdb->get_results("SELECT * FROM ".$TABLE_EQUIPE." WHERE id = ".$idEquipe);
 			
 			if (count($listeEquipes) == 1) {
 				// Valorisation des valeurs de l'équipe vis à vis des données présentes dans la BDD
@@ -75,13 +76,11 @@
 	    $poule_championnat = strip_tags($_POST['txt_poule_championnat']);
 	    $numero_equipe = strip_tags($_POST['txt_numero_equipe']);
 	    $archivee = strip_tags($_POST['txt_archivee']);
-
-		$tableEquipe = $wpdb->prefix."equipe";
 			
 		//si $_get['action']==creer inserer donnée en base préparer les paramêtre pour se protéger contre injection sql 
 		if (strcmp($_GET["action"], $creer) == 0) {
 			// Action de création on insert donc les données en base en préparant les paramètres pour eviter les injections sql
-			$inserted= $wpdb->insert($tableEquipe, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat ,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$numero_equipe,'archivee'=>$archivee));
+			$inserted= $wpdb->insert($TABLE_EQUIPE, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat ,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$numero_equipe,'archivee'=>$archivee));
 
 			// Vérification que la requête se soit bien éxécutée
 			if ($inserted === false) {
@@ -91,7 +90,7 @@
 			}
 		} elseif (strcmp($_GET["action"], $modifier) == 0) {
 			// Action de mise à jours de l'équipe en préparant les paramètres pour eviter injection sql
-			$updated = $wpdb->update($tableEquipe, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$umero_equipe,'archivee'=>$archivee), array('id' => $idEquipe), $format = null, $where_format = null);
+			$updated = $wpdb->update($TABLE_EQUIPE, array('libelle'=>$libelle,'annee'=>$annee,'numero_championnat'=>$numero_championnat,'division_championnat'=>$division_championnat,'phase_championnat'=>$phase_championnat,'poule_championnat'=>$poule_championnat,'numero_equipe'=>$umero_equipe,'archivee'=>$archivee), array('id' => $idEquipe), $format = null, $where_format = null);
 			//print_r($updated);
 			if ($updated === false) {
 				$message = "Modification d'équipe impossible";

@@ -2,14 +2,16 @@
 
     // Définition des variables globales
     global $wpdb;
+    require('constantes.php');
+
     $url_post = "Aucune valeur";
     $url_feuille_match = "Aucune valeur";
-    $tableParametrage = $wpdb->prefix."parametrage";
+
     $zoneInformation = false;
     $message = "";
 
     // Récupération de l'ensemble des valeurs de la table "parametrage"
-    $listeParametres = $wpdb->get_results("SELECT * FROM ".$tableParametrage);
+    $listeParametres = $wpdb->get_results("SELECT * FROM ".$TABLE_PARAMETRAGE);
     
     // On boucle sur l'ensemble des cle/valeur afin de valoriser le formulaire
     foreach ($listeParametres as $parametre) {
@@ -36,13 +38,13 @@
         $txt_url_feuille_match = strip_tags($_POST['txt_url_feuille_match']);
 
         // Mise à jours des valeurs l'une après l'autre vis à vis de sa clé primaire
-        if (!$wpdb->update($tableParametrage, array('valeur'=> $txt_url_post), array('cle' => 'URL_POST'), $format = null, $where_format = null)) {
+        if (!$wpdb->update($TABLE_PARAMETRAGE, array('valeur'=> $txt_url_post), array('cle' => $URL_POST), $format = null, $where_format = null)) {
             $zoneInformation = true;
-            $message = "La mise à jours de la clé 'URL_POST' avec la valeur ".$txt_url_post." est impossible. ";
+            $message = "La mise à jours de la clé ".$URL_POST." avec la valeur ".$txt_url_post." est impossible. ";
         }
-        if (!$wpdb->update($tableParametrage, array('valeur'=> $txt_url_feuille_match), array('cle' => 'URL_FEUILLE_MATCH'), $format = null, $where_format = null)) {
+        if (!$wpdb->update($TABLE_PARAMETRAGE, array('valeur'=> $txt_url_feuille_match), array('cle' => $URL_FEUILLE_MATCH), $format = null, $where_format = null)) {
             $zoneInformation = true;
-            $message = $message ."La mise à jours de la clé 'URL_FEUILLE_MATCH' avec la valeur ".$txt_url_feuille_match." est impossible. ";
+            $message = $message ."La mise à jours de la clé ".$URL_FEUILLE_MATCH." avec la valeur ".$txt_url_feuille_match." est impossible. ";
         }
 
         if (!$zoneInformation) {
